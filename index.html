@@ -2,7 +2,30 @@
 <html>
   <head>
     <!-- Start VWO Async SmartCode -->
-    <script src=`https://dev.visualwebsiteoptimizer.com/cloud-run-test/final/${window.location.search.split('id=')[1].split('&')[0]}.js`></script>
+    <script>
+      (function() {
+        // 1. Safely parse the URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const id = urlParams.get('id');
+    
+        // 2. Validate the ID (Crucial for security!)
+        // This regex allows ONLY alphanumeric characters, hyphens, and underscores.
+        // Adjust this regex if your IDs contain other specific characters.
+        const safeIdPattern = /^[0-9]+$/;
+    
+        if (id && safeIdPattern.test(id)) {
+          // 3. Dynamically create the script tag
+          const script = document.createElement('script');
+          script.src = `https://dev.visualwebsiteoptimizer.com/cloud-run-test/final/${id}.js`;
+          script.async = true; // Prevents the script from blocking HTML parsing
+    
+          // 4. Inject the script into the document head
+          document.head.appendChild(script);
+        } else {
+          console.warn("VWO Script Load Blocked: Invalid or missing 'id' parameter.");
+        }
+      })();
+    </script>
     <!-- End VWO Async SmartCode -->
     <title>Portfolio Website</title>
     <style>
